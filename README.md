@@ -168,7 +168,7 @@ http://localhost:3000
         "username": "string2",
         "email": "string2@gmail.com"
     },
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0cmluZzJAZ21haW      wuY29tIiwic3ViIjoiZjFjYjhjZmItNzVjNS00MzZjLThiZWItNTg1Y2YxYTJlODFiIiwiaWF0IjoxNzM4N      Dk4ODQ1LCJleHAiOjE3Mzg1MDI0NDV9.dWJEKEkPaf4gz2PXBSDC2k3eRQdK3vVKAGMATlxpIZQ"
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0cmluZzJAZ21haWwuY29tIiwic3ViIjoiZjFjYjhjZmItNzVjNS00MzZjLThiZWItNTg1Y2YxYTJlODFiIiwiaWF0IjoxNzM4N      Dk4ODQ1LCJleHAiOjE3Mzg1MDI0NDV9.dWJEKEkPaf4gz2PXBSDC2k3eRQdK3vVKAGMATlxpIZQ"
   }
   ```
 
