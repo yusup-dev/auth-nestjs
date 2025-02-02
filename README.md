@@ -32,8 +32,6 @@ Proyek ini adalah implementasi REST API untuk autentikasi pengguna menggunakan *
 ## **Struktur Proyek**
 ```
 project-root/
-├── dist/                      # Folder untuk file yang di-build
-├── node_modules/              # Dependencies
 ├── prisma/                    # Prisma schema dan migrasi
 ├── src/                       # Source code
 │   ├── auth/                  # Modul untuk autentikasi
@@ -92,6 +90,7 @@ Buat file `.env` di root proyek dan tambahkan variabel berikut:
 POSTGRES_USER="postgres"
 POSTGRES_PASSWORD="Password123"
 POSTGRES_DB="auth-db"
+PORT=3000
 JWT_SECRET=51310a557a282c0790012c55dbefce096a920da69ec22e6ea2fe18b7557a3a9762eeb1230738dd5664b7fb76d8473ba07454098adb2bbb8a41c7534bd6f0c103
 DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public"
 ```
@@ -143,11 +142,36 @@ http://localhost:3000
   }
   ```
 - **Response**:
-  ```json
-  {
-    "message": "User registered successfully"
-  }
-  ```
+  - **200 OK**:
+    ```json
+    {
+      "message": "User registered successfully"
+    }
+    ```
+  - **400 Bad Request**: Jika email atau username sudah terdaftar.
+    ```json
+    {
+      "message": "Email already exists"
+    }
+    ```
+  - **400 Bad Request**: Jika username sudah terdaftar.
+    ```json
+    {
+      "message": "Username already exists"
+    }
+    ```
+  - **500 Internal Server Error**: Jika terjadi masalah pada server.
+    ```json
+    {
+      "message": "Internal server error, please try again later"
+    }
+    ```
+  - **429 Too Many Requests**: Jika terlalu banyak permintaan dalam waktu singkat.
+    ```json
+    {
+      "message": "ThrottlerException: Too Many Requests"
+    }
+    ```
 
 #### **2. Login Pengguna**
 - **Method**: `POST`
@@ -160,34 +184,76 @@ http://localhost:3000
   }
   ```
 - **Response**:
-  ```json
-  {
-    "message": "Login successfully",
-    "user": {
+  - **200 OK**:
+    ```json
+    {
+      "message": "Login successfully",
+      "user": {
         "id": "f1cb8cfb-75c5-436c-8beb-585cf1a2e81b",
         "username": "string2",
         "email": "string2@gmail.com"
+<<<<<<< HEAD
     },
     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0cmluZzJAZ21haWwuY29tIiwic3ViIjoiZjFjYjhjZmItNzVjNS00MzZjLThiZWItNTg1Y2YxYTJlODFiIiwiaWF0IjoxNzM4N      Dk4ODQ1LCJleHAiOjE3Mzg1MDI0NDV9.dWJEKEkPaf4gz2PXBSDC2k3eRQdK3vVKAGMATlxpIZQ"
   }
   ```
+=======
+      },
+      "access_token": "jwt_token_here"
+    }
+    ```
+  - **400 Bad Request**: Jika kredensial yang dimasukkan salah.
+    ```json
+    {
+      "message": "Invalid credentials"
+    }
+    ```
+  - **404 Not Found**: Jika pengguna tidak ditemukan.
+    ```json
+    {
+      "message": "User not found"
+    }
+    ```
+  - **500 Internal Server Error**: Jika terjadi masalah pada server.
+    ```json
+    {
+      "message": "Internal server error, please try again later"
+    }
+    ```
+  - **429 Too Many Requests**: Jika terlalu banyak permintaan dalam waktu singkat.
+    ```json
+    {
+      "message": "ThrottlerException: Too Many Requests"
+    }
+    ```
+>>>>>>> feae8cd (updated)
 
 #### **3. Health Check**
 - **Method**: `GET`
 - **URL**: `/health`
 - **Response**:
-  ```json
-  {
-    "status": "ok",
-    "info": {},
-    "error": {},
-    "details": {}
-  }
-  
-  ```
+  - **200 OK**: 
+    ```json
+    {
+      "status": "ok",
+      "info": {
+        "database": { "status": "up" }
+      },
+      "error": {},
+      "details": {
+        "database": { "status": "up" }
+      }
+    }
+    ```
+  - **429 Too Many Requests**: Jika terlalu banyak permintaan dalam waktu singkat.
+    ```json
+    {
+      "message": "ThrottlerException: Too Many Requests"
+    }
 
 #### **4. Rate Limit**
-  - **Response**:
+- **Response**:
+  - **429 Too Many Requests**: Jika rate limit terlampaui.
     ```json
     {
       "statusCode": 429,
@@ -196,6 +262,14 @@ http://localhost:3000
       "path": "/health"
     }
     ```
+
+---
+
+### Penjelasan:
+- **Endpoint 1 (Registrasi Pengguna)** memungkinkan pengguna untuk melakukan registrasi dengan email dan username yang unik. Jika email atau username sudah terdaftar, sistem akan memberikan respons **400** dengan pesan yang sesuai.
+- **Endpoint 2 (Login Pengguna)** digunakan untuk login dengan email dan password. Jika login berhasil, server akan memberikan **access_token** yang dapat digunakan untuk autentikasi pada endpoint lainnya.
+- **Endpoint 3 (Health Check)** digunakan untuk memeriksa status aplikasi dan database. Jika keduanya berjalan dengan baik, respons akan menunjukkan status "up".
+- **Endpoint 4 (Rate Limit)** memberikan respons **429 Too Many Requests** jika terlalu banyak permintaan dalam waktu singkat.
 
 ---
 
@@ -210,10 +284,9 @@ ENV NODE_ENV=build
 USER node
 WORKDIR /home/node
 
-COPY package*.json ./
-RUN npm ci
+COPY --chown=node:node . . 
 
-COPY --chown=node:node . .
+RUN npm ci 
 
 RUN npx prisma generate \
     && npm run build \
@@ -227,11 +300,11 @@ ENV NODE_ENV=production
 USER node
 WORKDIR /home/node
 
-COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/package*.json ./ 
 COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
 ```
 
 ### **docker-compose.yml**
@@ -251,9 +324,14 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - "5432:5432"
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
     build: .
@@ -261,31 +339,21 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: "postgresql://postgres:Password123@postgres:5432/auth-db?schema=public"
       JWT_SECRET: ${JWT_SECRET}
       PORT: ${PORT}
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
-      - postgres
-    volumes:
-      - ./src:/app/src
+      postgres:
+        condition: service_healthy
     networks:
       - app-network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    container_name: nest-pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
-    ports:
-      - '5050:80'
-    depends_on:
-      - postgres
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   postgres-data:
@@ -300,10 +368,11 @@ networks:
 ## **Environment Variables**
 | Variable         | Description                          | Example Value                     |
 |------------------|--------------------------------------|-----------------------------------|
-| `POSTGRES_USER`           | Username database postgresql                 | `postgres`                            |
-| `POSTGRES_PASSWORD`           | Password database postgresql                | `Password123`                            |
-| `POSTGRES_DB`           | Nama database postgresql                 | `auth-db`                            |
-| `JWT_SECRET`     | Secret key untuk JWT signing         | `51310a557a282c0790012c55dbefce096a920da69ec22e6ea2fe18b7557a3a9762eeb1230738dd5664b7fb76d8473ba07454098adb2bbb8a41c7534bd6f0c103`             |
+| `POSTGRES_USER`           | Nama pengguna untuk database PostgreSQL	                | `postgres`                            |
+| `POSTGRES_PASSWORD`           | Kata sandi untuk database PostgreSQL              | `Password123`                            |
+| `POSTGRES_DB`           | Nama database PostgreSQL               | `auth-db`                            |
+| `PORT`           | Port untuk aplikasi                  | `3000`                            |
+| `JWT_SECRET`     | 	Kunci rahasia untuk penandatanganan JWT       | `51310a557a282c0790012c55dbefce096a920da69ec22e6ea2fe18b7557a3a9762eeb1230738dd5664b7fb76d8473ba07454098adb2bbb8a41c7534bd6f0c103`             |
 | `DATABASE_URL`   | URL untuk koneksi database PostgreSQL | `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public` |
 
 ---
