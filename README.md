@@ -192,12 +192,6 @@ http://localhost:3000
         "id": "f1cb8cfb-75c5-436c-8beb-585cf1a2e81b",
         "username": "string2",
         "email": "string2@gmail.com"
-<<<<<<< HEAD
-    },
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0cmluZzJAZ21haWwuY29tIiwic3ViIjoiZjFjYjhjZmItNzVjNS00MzZjLThiZWItNTg1Y2YxYTJlODFiIiwiaWF0IjoxNzM4N      Dk4ODQ1LCJleHAiOjE3Mzg1MDI0NDV9.dWJEKEkPaf4gz2PXBSDC2k3eRQdK3vVKAGMATlxpIZQ"
-  }
-  ```
-=======
       },
       "access_token": "jwt_token_here"
     }
@@ -226,7 +220,6 @@ http://localhost:3000
       "message": "ThrottlerException: Too Many Requests"
     }
     ```
->>>>>>> feae8cd (updated)
 
 #### **3. Health Check**
 - **Method**: `GET`
