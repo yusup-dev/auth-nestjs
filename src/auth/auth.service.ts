@@ -22,26 +22,33 @@ export class AuthService {
             const user = await this.prisma.user.findUnique({
                 where: { email: loginDto.email },
             });
-
+    
             if (!user) {
                 throw new NotFoundException(ERROR_MESSAGES.USER.NOT_FOUND);
             }
-
+    
             const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
             if (!isPasswordValid) {
                 throw new UnauthorizedException(ERROR_MESSAGES.USER.INVALID_CREDENTIALS);
             }
-
+    
             const payload = { email: user.email, sub: user.id };
+    
+            const access_token = this.jwtService.sign(payload);
             return {
-                id: user.id,
-                username: user.username,
-                access_token: this.jwtService.sign(payload),
+                message: 'Login successfully',
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                },
+                access_token,
             };
         } catch (error) {
             throw new InternalServerErrorException(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
     async register(registerDto: RegisterDto) {
         try {
@@ -57,7 +64,7 @@ export class AuthService {
                 },
             });
 
-            return { message: 'User registered successfully', user };
+            return { message: 'User registered successfully'};
 
         } catch (error) {
             throw new InternalServerErrorException(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);

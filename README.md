@@ -1,99 +1,319 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# **NestJS Authentication API**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-## Description
+Proyek ini adalah implementasi REST API untuk autentikasi pengguna menggunakan **NestJS**, **Prisma**, dan **Docker**. API ini menyediakan endpoint untuk registrasi dan login pengguna dengan keamanan yang kuat.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## **Fitur Utama**
+- **Registrasi Pengguna**: Endpoint untuk membuat akun pengguna baru.
+- **Autentikasi Pengguna**: Endpoint untuk login dan menghasilkan JWT.
+- **Validasi Email Unik**: Memastikan email yang digunakan belum terdaftar.
+- **Dokumentasi API**: Dokumentasi Swagger yang interaktif.
+- **Health Check**: Endpoint untuk memeriksa status aplikasi.
+- **Rate Limiting**: Melindungi aplikasi dari abuse dengan membatasi jumlah request.
 
-```bash
-$ npm install
+---
+
+## **Teknologi yang Digunakan**
+- **Backend**: NestJS (TypeScript)
+- **ORM**: Prisma
+- **Containerization**: Docker & Docker Compose
+- **Authentication**: JWT (JSON Web Tokens)
+- **API Documentation**: Swagger/OpenAPI
+- **Password Hashing**: bcrypt
+
+---
+
+## **Struktur Proyek**
+```
+project-root/
+├── dist/                      # Folder untuk file yang di-build
+├── node_modules/              # Dependencies
+├── prisma/                    # Prisma schema dan migrasi
+├── src/                       # Source code
+│   ├── auth/                  # Modul untuk autentikasi
+│   ├── common/                # Kode umum yang digunakan di seluruh aplikasi
+│   ├── health/                # Modul untuk health check
+│   ├── prisma/                # Prisma-related files
+│   ├── app.module.ts          # Root module
+│   ├── main.ts                # Entry point aplikasi
+│   ├── swagger.ts             # Konfigurasi Swagger
+├── test/                      # Unit dan integration tests
+├── .dockerignore              # Ignore file for Docker
+├── .env                       # Environment variables
+├── .gitignore                 # Ignore file for Git
+├── .prettierrc                # Konfigurasi Prettier
+├── docker-compose.yml         # Docker Compose configuration
+├── Dockerfile                 # Dockerfile untuk aplikasi
+├── eslint.config.mjs          # Konfigurasi ESLint
+├── nest-cli.json              # Konfigurasi NestJS CLI
+├── package-lock.json          # Lock file untuk dependencies
+├── package.json               # Dependencies and scripts
+├── README.md                  # Project documentation
+├── tsconfig.build.json        # Konfigurasi TypeScript untuk build
+├── tsconfig.build.tsbuildinfo # Build info
+├── tsconfig.json              # Konfigurasi TypeScript
+├── tsconfig.tsbuildinfo       # Build info
 ```
 
-## Compile and run the project
+---
 
+## **Panduan Pengaturan**
+
+### **Prasyarat**
+- Docker dan Docker Compose terinstal.
+- Node.js (v16 atau lebih baru).
+
+---
+
+### **Langkah 1: Clone Repository**
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/yusup-dev/auth-nestjs.git
+cd auth-nestjs
 ```
 
-## Run tests
+---
 
+### **Langkah 2: Install Dependencies**
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+### **Langkah 3: Setup Environment Variables**
+Buat file `.env` di root proyek dan tambahkan variabel berikut:
+```env
+POSTGRES_USER="postgres"
+POSTGRES_PASSWORD="Password123"
+POSTGRES_DB="auth-db"
+JWT_SECRET=51310a557a282c0790012c55dbefce096a920da69ec22e6ea2fe18b7557a3a9762eeb1230738dd5664b7fb76d8473ba07454098adb2bbb8a41c7534bd6f0c103
+DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public"
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+### **Langkah 4: Jalankan dengan Docker Compose**
+```bash
+docker-compose up --build   
+```
+Ini akan menjalankan:
+- Aplikasi NestJS di port `3000`.
+- PostgreSQL database di port `5432`.
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### **Langkah 5: Jalankan Migrasi Prisma**
+Setelah container berjalan, jalankan migrasi Prisma:
+```bash
+docker-compose exec app npx prisma migrate dev --name init
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### **Langkah 6: Akses Aplikasi**
+- Aplikasi: `http://localhost:3000`
+- Swagger UI: `http://localhost:3000/api`
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## **Dokumentasi API**
 
-## License
+### **Base URL**
+```
+http://localhost:3000
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### **Endpoints**
+
+#### **1. Registrasi Pengguna**
+- **Method**: `POST`
+- **URL**: `/auth/register`
+- **Request Body**:
+  ```json
+  {
+    "username": "string2",
+    "email": "string2@gmail.com",
+    "password": "string"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "message": "User registered successfully"
+  }
+  ```
+
+#### **2. Login Pengguna**
+- **Method**: `POST`
+- **URL**: `/auth/login`
+- **Request Body**:
+  ```json
+  {
+    "email": "string2@gmail.com",
+    "password": "string"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "message": "Login successfully",
+    "user": {
+        "id": "f1cb8cfb-75c5-436c-8beb-585cf1a2e81b",
+        "username": "string2",
+        "email": "string2@gmail.com"
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0cmluZzJAZ21haW      wuY29tIiwic3ViIjoiZjFjYjhjZmItNzVjNS00MzZjLThiZWItNTg1Y2YxYTJlODFiIiwiaWF0IjoxNzM4N      Dk4ODQ1LCJleHAiOjE3Mzg1MDI0NDV9.dWJEKEkPaf4gz2PXBSDC2k3eRQdK3vVKAGMATlxpIZQ"
+  }
+  ```
+
+#### **3. Health Check**
+- **Method**: `GET`
+- **URL**: `/health`
+- **Response**:
+  ```json
+  {
+    "status": "ok",
+    "info": {},
+    "error": {},
+    "details": {}
+  }
+  
+  ```
+
+#### **4. Rate Limit**
+  - **Response**:
+    ```json
+    {
+      "statusCode": 429,
+      "message": "ThrottlerException: Too Many Requests",
+      "timestamp": "2025-02-02T12:56:37.077Z",
+      "path": "/health"
+    }
+    ```
+
+---
+
+## **Konfigurasi Docker**
+
+### **Dockerfile**
+```dockerfile
+FROM node:20-alpine as builder
+
+ENV NODE_ENV=build
+
+USER node
+WORKDIR /home/node
+
+COPY package*.json ./
+RUN npm ci
+
+COPY --chown=node:node . .
+
+RUN npx prisma generate \
+    && npm run build \
+    && ls -l ./dist \
+    && npm prune --omit=dev
+
+FROM node:20-alpine
+
+ENV NODE_ENV=production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+
+CMD ["node", "dist/main.js"]
+```
+
+### **docker-compose.yml**
+```yaml
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - app-network
+
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: ${PORT}
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    volumes:
+      - ./src:/app/src
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+---
+
+## **Environment Variables**
+| Variable         | Description                          | Example Value                     |
+|------------------|--------------------------------------|-----------------------------------|
+| `POSTGRES_USER`           | Username database postgresql                 | `postgres`                            |
+| `POSTGRES_PASSWORD`           | Password database postgresql                | `Password123`                            |
+| `POSTGRES_DB`           | Nama database postgresql                 | `auth-db`                            |
+| `JWT_SECRET`     | Secret key untuk JWT signing         | `51310a557a282c0790012c55dbefce096a920da69ec22e6ea2fe18b7557a3a9762eeb1230738dd5664b7fb76d8473ba07454098adb2bbb8a41c7534bd6f0c103`             |
+| `DATABASE_URL`   | URL untuk koneksi database PostgreSQL | `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?schema=public` |
+
+---
+
+## **Development vs Production**
+- **Development**:
+  - Gunakan `npm run start:dev` untuk hot-reload.
+  - Jalankan migrasi Prisma dengan `npx prisma migrate dev`.
+- **Production**:
+  - Gunakan `npm run start:prod` untuk menjalankan aplikasi yang sudah di-build.
+  - Pastikan environment variables diatur dengan benar.
+
+---

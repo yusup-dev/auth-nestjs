@@ -1,20 +1,29 @@
-# Gunakan image Node.js
-FROM node:18
+FROM node:20-alpine as builder
 
-# Set working directory di dalam container
-WORKDIR /app
+ENV NODE_ENV=build
 
-# Salin file package.json dan package-lock.json (atau yarn.lock) untuk instalasi dependencies
+USER node
+WORKDIR /home/node
+
 COPY package*.json ./
+RUN npm ci
 
-# Instal dependencies
-RUN npm install
+COPY --chown=node:node . .
 
-# Salin seluruh kode sumber ke dalam container
-COPY . .
+RUN npx prisma generate \
+    && npm run build \
+    && ls -l ./dist \
+    && npm prune --omit=dev
 
-# Build aplikasi
-RUN npm run build
+FROM node:20-alpine
 
-# Jalankan aplikasi
-CMD ["node", "dist/main"]
+ENV NODE_ENV=production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+
+CMD ["node", "dist/main.js"]

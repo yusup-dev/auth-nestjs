@@ -18,10 +18,11 @@ export class AuthController {
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Login user' })
-  @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, type: LoginResponseDto })
-  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+@ApiOperation({ summary: 'Login user' })
+@ApiBody({ type: LoginDto })
+@ApiResponse({ status: 200, type: LoginResponseDto })
+async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     return this.authService.login(loginDto);
-  }
+}
+
 }

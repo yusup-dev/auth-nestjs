@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
 import { HealthCheckService, HealthCheck } from '@nestjs/terminus';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ERROR_MESSAGES } from 'src/common/constants/error-messages.constants';
 
 @ApiTags('Health')
 @Controller('health')
@@ -21,7 +22,7 @@ export class HealthController {
       await this.prisma.$queryRaw`SELECT 1`;
       return this.health.check([]);
     } catch (error) {
-      throw new Error('Database connection failed');
+      throw new InternalServerErrorException(ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   }
 }
